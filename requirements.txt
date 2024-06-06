@@ -2,6 +2,8 @@ flask
 gunicorn
 google-generativeai
 langchain
-langchain-community
 faiss-cpu
-langchain-google-genai
+langchain==0.2.2
+langchain-community==0.2.3
+langchain-core==0.2.4
+langchain-google-genai==1.0.6
