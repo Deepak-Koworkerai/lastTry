@@ -1,4 +1,5 @@
 flask
+gunicorn
 google-generativeai
 langchain
 langchain_community
