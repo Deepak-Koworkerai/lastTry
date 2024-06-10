@@ -73,7 +73,7 @@ def user_input(user_question):
     docs = new_db.similarity_search(user_question,k=1)
     logger.info("-------------------------RETRIEVED SIMILAR DATA!!!--------------------------") 
     context = " ".join([doc.page_content for doc in docs])
-    print(docs+"\n\n")
+    print(docs)
 
     return context
 
