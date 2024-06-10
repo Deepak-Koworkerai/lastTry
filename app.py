@@ -31,21 +31,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Set the SSL context to avoid verification issues within the Flask app context
-#ssl._create_default_https_context = ssl._create_unverified_context
-
-def store_string_to_mongodb(qn):
-    # MongoDB URI
-    mongo_uri = "mongodb+srv://deepak1997sakthi:6mog4b82IoWj2ZO6@movieapidb.ibiidp5.mongodb.net/"
-    # Create a MongoDB client
-    client = MongoClient(mongo_uri)
-    # Connect to a specific database
-    db = client["RAG"]
-    # Connect to a specific collection
-    collection = db["DEPLOY_RAG_QUESTIONS"]
-    # Create a document with the user question
-    document = {"user_question": qn}
-    # Insert the document into the collection
-    result = collection.insert_one(document)
+ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def get_google_api_key():
@@ -77,7 +63,6 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 
 
 def user_input(user_question):
-    store_string_to_mongodb(user_question)
     # Initialize Google Generative AI Embeddings
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key=get_google_api_key())
     # Load FAISS index
