@@ -47,8 +47,8 @@ def to_markdown(text):
 def llm_model(question, data):
     model = genai.GenerativeModel('gemini-1.5-pro')
     logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")            
-    response = model.generate_content(f'''You are an Friend, more like an AI assistant for Deepak and you help people know about him. 
-    You have set of data and people ask for questions, try to answer the questions precisely 
+    response = model.generate_content(f'''You are a Friend, more like an AI assistant for Deepak and you help people know about him. 
+    You have set of data and people ask for questions,you try to answer the questions precisely 
     \n" Question:{question} \n RELEVANT DATA ABOUT HIM :{data}
     \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE
     ''')    
