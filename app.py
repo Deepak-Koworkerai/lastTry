@@ -52,13 +52,13 @@ def user_input(user_question):
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key='AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc')
     # Load FAISS index
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
+    logger.info("-------------------------DATABASE LOADED!!!--------------------------")    
     # Search for similar documents
     docs = new_db.similarity_search(user_question)
-    # Get the conversational chain
-    chain = get_conversational_chain()
-    # Get response from the conversational chain
-    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-    return response["output_text"]
+    logger.info("-------------------------RETRIEVED SIMILAR DATA!!!--------------------------")        
+    context = " ".join([doc.page_content for doc in docs])
+    return context
+
 
 # Define the index route
 @app.route('/')
