@@ -17,6 +17,8 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
+genai.configure(api_key="AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc")
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -33,6 +35,13 @@ def get_google_api_key():
 import gevent.monkey
 gevent.monkey.patch_all()
 
+def llm_model(question, data):
+    model = genai.GenerativeModel('gemini-1.5-pro')
+    logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")            
+    response = model.generate_content(f'''You are an Friend and a AI assistant for Deepak PROVIDE THE PERFECT ANSWER IN THREE POINTS 
+    for the user querstion from the available data!!\n" Question:{question} \n CONTEXT:{data}''')    
+    logger.info("-------------------------MODEL DATA DONE!!!--------------------------\n\n\n\n\n")            
+    return response.text
 
 # Suppress warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -46,7 +55,7 @@ def user_input(user_question):
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     logger.info("-------------------------DATABASE LOADED!!!--------------------------")    
     # Search for similar documents
-    docs = new_db.similarity_search(user_question,k=1)
+    docs = new_db.similarity_search(user_question,k=2)
     logger.info("-------------------------RETRIEVED SIMILAR DATA!!!--------------------------")        
     context = " ".join([doc.page_content for doc in docs])
     return context
@@ -57,41 +66,42 @@ def user_input(user_question):
 def index():
     return render_template('index.html')
 
-# Define the ask route to handle POST requests
-# @app.route('/ask', methods=['POST'])
-# def ask():
-#     # Get user's question from the request
-#     user_question = request.form['question']
-#     logger.info(f"USER QUESTION: {user_question}")
-#     # Get response based on user's question
-#     response = user_input(user_question)
-#     logger.info(f"User Question: {user_question}, Response: {response}")
-#     # Return the response as JSON
-#     return jsonify({'response': prettify_text(response)})
-
+#Define the ask route to handle POST requests
 @app.route('/ask', methods=['POST'])
 def ask():
     # Get user's question from the request
     user_question = request.form['question']
+    logger.info(f"USER QUESTION: {user_question}")
+    # Get response based on user's question
     response = user_input(user_question)
+    out = llm_model(user_question, response)
     logger.info(f"User Question: {user_question}, Response: {response}")
+    # Return the response as JSON
+    return jsonify({'response': prettify_text(response)})
+
+# @app.route('/ask', methods=['POST'])
+# def ask():
+#     # Get user's question from the request
+#     user_question = request.form['question']
+#     response = user_input(user_question)
+#     logger.info(f"User Question: {user_question}, Response: {response}")
     
-    with app.app_context():
-        # Prepare data to send to the other Flask application
-        data = {
-            'user_question': user_question,
-            'response': response
-        }
+#     with app.app_context():
+#         # Prepare data to send to the other Flask application
+#         data = {
+#             'user_question': user_question,
+#             'response': response
+#         }
     
-        other_app_url = 'https://embeddings-yijx.onrender.com/model'  # Replace with the actual URL of the other Flask application
-        response = requests.post(other_app_url, json=data)
-        logger.info("\n\n\n\n --------------RESPONSE--------------------------------\n\n\n")
-        logger.info(type(response),"\n\n")
-        out = response.json()['output']
-        if response.status_code == 200:
-            return jsonify({'response': prettify_text(out)})
-        else:
-            return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
+#         other_app_url = 'https://embeddings-yijx.onrender.com/model'  # Replace with the actual URL of the other Flask application
+#         response = requests.post(other_app_url, json=data)
+#         logger.info("\n\n\n\n --------------RESPONSE--------------------------------\n\n\n")
+#         logger.info(type(response),"\n\n")
+#         out = response.json()['output']
+#         if response.status_code == 200:
+#             return jsonify({'response': prettify_text(out)})
+#         else:
+#             return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
 
 # Utility function to prettify text
 def prettify_text(text):
