@@ -8,7 +8,12 @@ from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
 import warnings
 import gevent.monkey
+import logging
+
 gevent.monkey.patch_ssl()
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -51,7 +56,9 @@ def index():
 @app.route('/ask', methods=['POST'])
 def ask():
     user_question = request.form['question']
+    logger.info(f"USER QUESTION:{}")    
     response = user_input(user_question)
+    logger.info(f"User Question: {user_question}, Response: {response}")    
     return jsonify({'response': prettify_text(response)})
 
 def prettify_text(text):
