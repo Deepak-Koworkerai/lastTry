@@ -49,16 +49,43 @@ def index():
     return render_template('index.html')
 
 # Define the ask route to handle POST requests
+# @app.route('/ask', methods=['POST'])
+# def ask():
+#     # Get user's question from the request
+#     user_question = request.form['question']
+#     logger.info(f"USER QUESTION: {user_question}")
+#     # Get response based on user's question
+#     response = user_input(user_question)
+#     logger.info(f"User Question: {user_question}, Response: {response}")
+#     # Return the response as JSON
+#     return jsonify({'response': prettify_text(response)})
+
+import requests
+
 @app.route('/ask', methods=['POST'])
 def ask():
     # Get user's question from the request
     user_question = request.form['question']
     logger.info(f"USER QUESTION: {user_question}")
+    
     # Get response based on user's question
     response = user_input(user_question)
     logger.info(f"User Question: {user_question}, Response: {response}")
-    # Return the response as JSON
-    return jsonify({'response': prettify_text(response)})
+    
+    # Prepare data to send to the other Flask application
+    data = {
+        'user_question': user_question,
+        'response': prettify_text(response)
+    }
+
+    other_app_url = 'https://embeddings-yijx.onrender.com/model'  # Replace with the actual URL of the other Flask application
+    response = requests.post(other_app_url, json=data)
+
+    if response.status_code == 200:
+        return jsonify(response.json())
+    else:
+        return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
+
 
 # Utility function to prettify text
 def prettify_text(text):
