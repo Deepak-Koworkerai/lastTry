@@ -54,8 +54,7 @@ def llm_model(question, data):
     response = model.generate_content(f'''You are a Friend, more like an AI assistant for Deepak and you help people know about him. 
     You have set of data and people ask for questions,you try to answer the questions precisely 
     \n" Question:{question} \n RELEVANT DATA ABOUT HIM :{data}
-    \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE AND THE EXPECTED FORMAT HAS TO BE IN A HTML FORMAT OF BOLD ITALIC, BECAUSE THE OUTPUT HAS TO BE PASSED TO A HTML SCIPT JS FILE 
-    ''')    
+    \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE, ANSER CORRECTLY AFTER EVALUATING THE ANSWER SATISFIES QUESTION     ''')    
     logger.info("-------------------------MODEL DATA DONE!!!--------------------------\n\n\n\n\n")            
     return response.text
 
