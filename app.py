@@ -44,19 +44,13 @@ def get_google_api_key():
 import gevent.monkey
 gevent.monkey.patch_all()
 
-
-def to_markdown(text):
-    text = text.replace('•', '  *')
-    indented_text = textwrap.indent(text, '> ', predicate=lambda _: True)
-    return indented_text
-
 def llm_model(question, data):
     model = genai.GenerativeModel('gemini-1.5-pro')
     logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")            
     response = model.generate_content(f'''You are a Friend, more like an AI assistant for Deepak and you help people know about him. 
     You have set of data and people ask for questions,you try to answer the questions precisely 
     \n" Question:{question} \n RELEVANT DATA ABOUT HIM :{data}
-    \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE
+    \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE AND THE EXPECTED FORMAT HAS TO BE IN A HTML FORMAT OF BOLD ITALIC, BECAUSE THE OUTPUT HAS TO BE PASSED TO A HTML SCIPT JS FILE 
     ''')    
     logger.info("-------------------------MODEL DATA DONE!!!--------------------------\n\n\n\n\n")            
     return response.text
@@ -96,9 +90,8 @@ def ask():
     out = llm_model(user_question, response)
     logger.info(f"User Question: {user_question}, Response: {out}")
 
-    refined_out = to_markdown(out)
     # Return the response as JSON
-    return jsonify({'response': refined_out})
+    return jsonify({'response': out})
 
 
 # @app.route('/ask', methods=['POST'])
