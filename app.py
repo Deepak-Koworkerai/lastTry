@@ -15,6 +15,7 @@ import ssl
 import textwrap
 from IPython.display import display
 from IPython.display import Markdown
+import json
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -31,6 +32,9 @@ app = Flask(__name__)
 
 # Set the SSL context to avoid verification issues within the Flask app context
 ssl._create_default_https_context = ssl._create_unverified_context
+
+def default_json(t):
+    return f'{t}'
 
 
 def get_google_api_key():
@@ -96,7 +100,7 @@ def ask():
     
 
     # Return the response as JSON
-    return jsonify({'response': markdown_response})
+    return jsonify({'response': default_json(markdown_response)})
 
 
 # @app.route('/ask', methods=['POST'])
