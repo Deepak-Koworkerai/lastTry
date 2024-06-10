@@ -68,4 +68,4 @@ def prettify_text(text):
 # Run the Flask app
 if __name__ == '__main__':
     # Run the app in debug mode
-    app.run(debug=True, threaded=True, port=5000, host='0.0.0.0', request_handler_class="gevent.pywsgi.WSGIHandler", timeout=150)
+    app.run(debug=True, threaded=True, port=5000, host='0.0.0.0')
