@@ -7,10 +7,8 @@ from langchain_community.vectorstores.faiss import FAISS
 from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain.chains.question_answering import load_qa_chain
 from langchain.prompts import PromptTemplate
-import logging
 import time
 import warnings
-from tenacity import retry, stop_after_attempt, wait_fixed
 
 warnings.filterwarnings("ignore", category=FutureWarning)
 
@@ -31,35 +29,24 @@ Note:
 Answer:
 """
 
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.3, google_api_key='YOUR_GOOGLE_API_KEY')
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.3, google_api_key='AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc')
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
 
-@retry(stop=stop_after_attempt(3), wait=wait_fixed(10))
-def embed_documents_with_retry(embeddings, documents):
-    return embeddings.embed_documents(documents)
-
 def user_input(user_question):
-    embeddings = GoogleGenerativeAIEmbeddings(
-        model="models/embedding-001",
-        google_api_key='YOUR_GOOGLE_API_KEY',
-        timeout=60  # Set a longer timeout (in seconds)
-    )
+    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key='AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc')
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
     chain = get_conversational_chain()
-    try:
-        response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
-    except GoogleGenerativeAIError as e:
-        logging.error(f"Error embedding content: {e}")
-        return "There was an error processing your request. Please try again later."
+    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
     return response["output_text"]
 
 def read_text_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text
+
 
 app = Flask(__name__)
 
@@ -81,3 +68,12 @@ def prettify_text(text):
 
 if __name__ == '__main__':
     app.run(debug=True)
+
+
+
+
+
+
+
+
+
