@@ -94,8 +94,14 @@ def ask():
     # Convert the response to markdown
     markdown_response = to_markdown(out)
     
+ # Ensure the markdown response is a string
+    if isinstance(markdown_response, str):
+        serialized_response = markdown_response
+    else:
+        serialized_response = str(markdown_response)
+    
     # Return the response as JSON
-    return jsonify({'response': str(markdown_response)})
+    return jsonify({'response': serialized_response})
 
 
 # @app.route('/ask', methods=['POST'])
