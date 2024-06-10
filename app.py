@@ -61,7 +61,6 @@ def index():
 #     # Return the response as JSON
 #     return jsonify({'response': prettify_text(response)})
 
-import requests
 
 @app.route('/ask', methods=['POST'])
 def ask():
@@ -73,20 +72,20 @@ def ask():
     response = user_input(user_question)
     logger.info(f"User Question: {user_question}, Response: {response}")
     
-    # Prepare data to send to the other Flask application
-    data = {
-        'user_question': user_question,
-        'response': prettify_text(response)
-    }
-
-    other_app_url = 'https://embeddings-yijx.onrender.com/model'  # Replace with the actual URL of the other Flask application
-    response = requests.post(other_app_url, json=data)
-
-    if response.status_code == 200:
-        return jsonify(response.json())
-    else:
-        return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
-
+    with app.app_context():
+        # Prepare data to send to the other Flask application
+        data = {
+            'user_question': user_question,
+            'response': prettify_text(response)
+        }
+    
+        other_app_url = 'https://embeddings-yijx.onrender.com/model'  # Replace with the actual URL of the other Flask application
+        response = requests.post(other_app_url, json=data)
+    
+        if response.status_code == 200:
+            return jsonify(response.json())
+        else:
+            return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
 
 # Utility function to prettify text
 def prettify_text(text):
