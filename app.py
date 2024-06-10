@@ -31,7 +31,7 @@ load_dotenv()
 app = Flask(__name__)
 
 # Set the SSL context to avoid verification issues within the Flask app context
-ssl._create_default_https_context = ssl._create_unverified_context
+#ssl._create_default_https_context = ssl._create_unverified_context
 
 def store_string_to_mongodb(qn):
     # MongoDB URI
