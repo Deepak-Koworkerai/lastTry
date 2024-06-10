@@ -12,7 +12,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 def get_google_api_key():
-    return os.getenv("GOOGLE_API_KEY")
+    return os.getenv("AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc")
 
 # Import gevent and monkey-patch early to avoid MonkeyPatchWarning
 import gevent.monkey
