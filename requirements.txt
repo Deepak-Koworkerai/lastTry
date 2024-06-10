@@ -17,4 +17,4 @@ gunicorn
 requests
 urllib3
 ipython
-pymongo
+
