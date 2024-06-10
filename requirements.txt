@@ -16,3 +16,4 @@ python-dotenv
 gunicorn
 requests
 urllib3
+ipython
