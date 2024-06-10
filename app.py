@@ -33,9 +33,13 @@ app = Flask(__name__)
 # Set the SSL context to avoid verification issues within the Flask app context
 ssl._create_default_https_context = ssl._create_unverified_context
 
-def default_json(t):
-    return f'{t}'
 
+def prettify_text(text):
+    prettified = text.replace('\n', '<br>')
+    prettified = prettified.replace('**', '<b>').replace('*', '<li>')
+    prettified = prettified.replace('<b>', '</b>', 1)  # Ensure to close the first bold tag correctly
+    return prettified
+    
 
 def get_google_api_key():
     return os.getenv("AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc")
@@ -91,7 +95,7 @@ def ask():
     logger.info(f"User Question: {user_question}, Response: {out}")
 
     # Return the response as JSON
-    return jsonify({'response': out})
+    return jsonify({'response': prettify_text(out)})
 
 
 # @app.route('/ask', methods=['POST'])
