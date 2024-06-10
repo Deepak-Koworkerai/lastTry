@@ -46,9 +46,10 @@ gevent.monkey.patch_all()
 
 
 def to_markdown(text):
-  text = text.replace('•', '  *')
-  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
-    
+    text = text.replace('•', '  *')
+    indented_text = textwrap.indent(text, '> ', predicate=lambda _: True)
+    return indented_text
+
 def llm_model(question, data):
     model = genai.GenerativeModel('gemini-1.5-pro')
     logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")            
@@ -94,13 +95,10 @@ def ask():
     response = user_input(user_question)
     out = llm_model(user_question, response)
     logger.info(f"User Question: {user_question}, Response: {out}")
-    
-    # Convert the response to markdown
-    markdown_response = to_markdown(out)
-    
 
+    refined_out = to_markdown(out)
     # Return the response as JSON
-    return jsonify({'response': default_json(markdown_response)})
+    return jsonify({'response': refined_out})
 
 
 # @app.route('/ask', methods=['POST'])
