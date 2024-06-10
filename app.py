@@ -85,12 +85,18 @@ def ask():
     # Get user's question from the request
     user_question = request.form['question']
     logger.info(f"USER QUESTION: {user_question}")
+    
     # Get response based on user's question
     response = user_input(user_question)
     out = llm_model(user_question, response)
     logger.info(f"User Question: {user_question}, Response: {out}")
+    
+    # Convert the response to markdown
+    markdown_response = to_markdown(out)
+    
     # Return the response as JSON
-    return jsonify({'response': to_markdown(out)})
+    return jsonify({'response': markdown_response})
+
 
 # @app.route('/ask', methods=['POST'])
 # def ask():
