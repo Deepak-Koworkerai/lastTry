@@ -61,7 +61,6 @@ def index():
 #     # Return the response as JSON
 #     return jsonify({'response': prettify_text(response)})
 
-
 @app.route('/ask', methods=['POST'])
 def ask():
     # Get user's question from the request
@@ -69,21 +68,27 @@ def ask():
     logger.info(f"USER QUESTION: {user_question}")
     
     # Get response based on user's question
-    response = user_input(user_question)
+    response = '''
+                  "output": "Deepak has worked on numerous impressive projects. One of his notable projects is the Character-Level-GPT, where he developed a language model capable of generating coherent text at the character level, showcasing his expertise in deep learning and natural language processing. He also implemented an Audio/Video Summarizer using OpenAI's Whisper model for automatic transcription and content generation, which aids in quick comprehension of key points. Another project, the Bigram, MLP - Neural Network implementation, involved generating new Indian baby names using a dataset of over 55,000 names. He also created gradDescentor, a minimalist neural network implementation from scratch, which included a compact Autograd engine and a concise neural networks library. Additionally, Deepak developed a personal portfolio website using HTML, CSS, and JS. His FeedMePDF project involved creating a PDF reader application that parses data from PDFs and stores it in a vector database,  
+                '''
+    
+    
     logger.info(f"User Question: {user_question}, Response: {response}")
     
     with app.app_context():
         # Prepare data to send to the other Flask application
         data = {
             'user_question': user_question,
-            'response': prettify_text(response)
+            'response': response
         }
     
         other_app_url = 'https://embeddings-yijx.onrender.com/model'  # Replace with the actual URL of the other Flask application
         response = requests.post(other_app_url, json=data)
-    
+        print("\n\n\n\n --------------RESPONSE--------------------------------\n\n\n")
+        print(type(response),"\n\n")
+        out = response.json()['output']
         if response.status_code == 200:
-            return jsonify(response.json())
+            return jsonify({'response': prettify_text(out)})
         else:
             return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
 
