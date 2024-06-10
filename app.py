@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 import os
 import requests
 import ssl 
+import textwrap
+from IPython.display import display
+from IPython.display import Markdown
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -36,11 +39,19 @@ def get_google_api_key():
 import gevent.monkey
 gevent.monkey.patch_all()
 
+
+def to_markdown(text):
+  text = text.replace('•', '  *')
+  return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
+    
 def llm_model(question, data):
     model = genai.GenerativeModel('gemini-1.5-pro')
     logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")            
-    response = model.generate_content(f'''You are an Friend and a AI assistant for Deepak PROVIDE THE PERFECT ANSWER IN THREE POINTS 
-    for the user querstion from the available data!!\n" Question:{question} \n CONTEXT:{data}''')    
+    response = model.generate_content(f'''You are an Friend, more like an AI assistant for Deepak and you help people know about him. 
+    You have set of data and people ask for questions, try to answer the questions precisely 
+    \n" Question:{question} \n RELEVANT DATA ABOUT HIM :{data}
+    \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE
+    ''')    
     logger.info("-------------------------MODEL DATA DONE!!!--------------------------\n\n\n\n\n")            
     return response.text
 
@@ -78,7 +89,7 @@ def ask():
     out = llm_model(user_question, response)
     logger.info(f"User Question: {user_question}, Response: {out}")
     # Return the response as JSON
-    return jsonify({'response': prettify_text(out)})
+    return jsonify({'response': to_markdown(out)})
 
 # @app.route('/ask', methods=['POST'])
 # def ask():
@@ -104,12 +115,7 @@ def ask():
 #         else:
 #             return jsonify({'success': False, 'error': 'Failed to get response from the other Flask application'})
 
-# Utility function to prettify text
-def prettify_text(text):
-    prettified = text.replace('\n', '<br>')
-    prettified = prettified.replace('**', '<b>').replace('*', '<li>')
-    prettified = prettified.replace('<b>', '</b>', 1)  # Ensure to close the first bold tag correctly
-    return prettified
+
 
 # Run the Flask app
 if __name__ == '__main__':
