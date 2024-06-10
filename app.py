@@ -10,9 +10,12 @@ import warnings
 from dotenv import load_dotenv
 import os
 import requests
+import ssl 
 
 # Load environment variables from .env file
 load_dotenv()
+# Set the SSL context to avoid verification issues
+ssl._create_default_https_context = ssl._create_unverified_context
 
 def get_google_api_key():
     return os.getenv("AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc")
