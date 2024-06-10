@@ -35,17 +35,14 @@ Answer:
     return chain
 
 def user_input(user_question):
+    print("\n\nTHE USER QUESTION IS :",user_question,"\n\n")
     embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key='AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc')
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
     chain = get_conversational_chain()
     response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+    print("\n\nTHE USER QUESTION IS :",response["output_text"],"\n\n")    
     return response["output_text"]
-
-def read_text_file(file_path):
-    with open(file_path, 'r', encoding='utf-8') as file:
-        text = file.read()
-    return text
 
 
 app = Flask(__name__)
