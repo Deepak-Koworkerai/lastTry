@@ -81,7 +81,7 @@ def user_input(user_question):
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     logger.info("-------------------------DATABASE LOADED!!!--------------------------")    
     # Search for similar documents
-    docs = new_db.similarity_search(user_question,k=1)
+    docs = new_db.similarity_search(user_question,k=3)
     logger.info("-------------------------RETRIEVED SIMILAR DATA!!!--------------------------") 
     context = " ".join([doc.page_content for doc in docs])
     print(context)
