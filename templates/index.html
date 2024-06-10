@@ -6,17 +6,58 @@
     <style>
         body {
             font-family: Arial, sans-serif;
+            background-color: #f0f2f5;
             margin: 40px;
         }
         h1 {
             color: #333;
+            text-align: center;
+        }
+        #chat-container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        #question {
+            width: calc(100% - 100px);
+            padding: 10px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        #question:focus {
+            border-color: #007BFF;
+        }
+        #ask {
+            padding: 10px 20px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        #ask:hover {
+            background-color: #0056b3;
         }
         #response {
             margin-top: 20px;
-            padding: 10px;
+            padding: 15px;
             background: #f9f9f9;
             border: 1px solid #ddd;
             border-radius: 5px;
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        #response.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
         b {
             color: #007BFF;
@@ -27,25 +68,28 @@
     </style>
 </head>
 <body>
-    <h1>Chatbot</h1>
-    <br><br>
-    <input type="text" id="question" placeholder="Ask a question">
-    <button id="ask">Ask</button>
-    <div id="response"></div>
+    <div id="chat-container">
+        <h1>Chatbot</h1>
+        <input type="text" id="question" placeholder="Ask a question">
+        <button id="ask">Ask</button>
+        <div id="response"></div>
+    </div>
 
     <script>
         $(document).ready(function() {
-            $('#vectorize').click(function() {
-                $.post('/vectorize', function(data) {
-                    alert(data);
-                });
-            });
-
             $('#ask').click(function() {
                 var question = $('#question').val();
-                $.post('/ask', { question: question }, function(data) {
-                    $('#response').html(data.response);
-                });
+                if(question.trim() !== "") {
+                    $.post('/ask', { question: question }, function(data) {
+                        $('#response').html(data.response).addClass('visible');
+                    });
+                }
+            });
+
+            $('#question').keypress(function(e) {
+                if(e.which == 13) {
+                    $('#ask').click();
+                }
             });
         });
     </script>
