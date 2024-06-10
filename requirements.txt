@@ -14,3 +14,5 @@ faiss-cpu
 gevent
 python-dotenv
 gunicorn
+requests
+urllib3
