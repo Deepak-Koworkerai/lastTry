@@ -82,7 +82,7 @@
                 if(question.trim() !== "") {
                     alert(question);
                     $.post('/ask', { question: question }, function(data) {
-                        $('#response').html(data.response).addClass('visible');
+                        $('#response').html(data.response.output).addClass('visible');
                     });
                 }
             });
