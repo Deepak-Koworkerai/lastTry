@@ -13,9 +13,9 @@ import requests
 import ssl 
 
 # Set up logging
-
-logging.basicConfig(level=logger = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 # Load environment variables from .env file
 load_dotenv()
