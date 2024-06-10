@@ -56,7 +56,7 @@ def index():
 @app.route('/ask', methods=['POST'])
 def ask():
     user_question = request.form['question']
-    logger.info(f"USER QUESTION:{}")    
+    logger.info(f"USER QUESTION:{user_question}")    
     response = user_input(user_question)
     logger.info(f"User Question: {user_question}, Response: {response}")    
     return jsonify({'response': prettify_text(response)})
