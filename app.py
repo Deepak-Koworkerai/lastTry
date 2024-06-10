@@ -51,12 +51,13 @@ gevent.monkey.patch_all()
 def llm_model(question, data):
     model = genai.GenerativeModel('gemini-1.5-pro')
     logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")
-    prompt = f'''You are a friendly AI assistant created by Deepak. Your role is to help other people learn more about him by providing relevant information. You have provided with relevant data about Deepak. When someone asks a question, you aim to answer it accurately and conversationally.
+    prompt = f'''You are a friendly, intelligent assistant created by Deepak. Your role is to answer people's question from the available data provided. 
+                 You have provided with relevant data about Deepak and a question, you aim to answer it accurately and conversationally from provided data only.
             
                 Question: {question}
                 Relevant data about Deepak: {data}
                 
-                Your task is to generate a friendly conversational response that correctly answers the question after evaluating the provided data.
+                Your task is to generate a friendly conversational response that correctly answers the questions.
 '''
 
     response = model.generate_content(prompt)    
