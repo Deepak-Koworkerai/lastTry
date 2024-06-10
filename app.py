@@ -50,11 +50,16 @@ gevent.monkey.patch_all()
 
 def llm_model(question, data):
     model = genai.GenerativeModel('gemini-1.5-pro')
-    logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")            
-    response = model.generate_content(f'''You are a Friend, more like an AI assistant for Deepak and you help people know about him. 
-    You have set of data and people ask for questions,you try to answer the questions precisely 
-    \n" Question:{question} \n RELEVANT DATA ABOUT HIM :{data}
-    \n THE OUTPUT HAS TO BE A FRIENDLY CONVERSATIONAL RESPONSE, ANSER CORRECTLY AFTER EVALUATING THE ANSWER SATISFIES QUESTION     ''')    
+    logger.info("-------------------------DATA PASSING TO THE MODEL!!!--------------------------")
+    prompt = f'''You are a friendly AI assistant created by Deepak. Your role is to help other people learn more about him by providing relevant information. You have provided with relevant data about Deepak. When someone asks a question, you aim to answer it accurately and conversationally.
+            
+                Question: {question}
+                Relevant data about Deepak: {data}
+                
+                Your task is to generate a friendly conversational response that correctly answers the question after evaluating the provided data.
+'''
+
+    response = model.generate_content(prompt)    
     logger.info("-------------------------MODEL DATA DONE!!!--------------------------\n\n\n\n\n")            
     return response.text
 
@@ -73,7 +78,7 @@ def user_input(user_question):
     docs = new_db.similarity_search(user_question,k=1)
     logger.info("-------------------------RETRIEVED SIMILAR DATA!!!--------------------------") 
     context = " ".join([doc.page_content for doc in docs])
-    print(docs)
+    print(context)
 
     return context
 
