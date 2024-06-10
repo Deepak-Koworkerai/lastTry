@@ -12,9 +12,17 @@ import os
 import requests
 import ssl 
 
+# Set up logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 # Load environment variables from .env file
 load_dotenv()
-# Set the SSL context to avoid verification issues
+
+# Initialize the Flask app
+app = Flask(__name__)
+
+# Set the SSL context to avoid verification issues within the Flask app context
 ssl._create_default_https_context = ssl._create_unverified_context
 
 def get_google_api_key():
@@ -24,15 +32,11 @@ def get_google_api_key():
 import gevent.monkey
 gevent.monkey.patch_all()
 
-# Set up logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
 
 # Suppress warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
 
-# Initialize the Flask app
-app = Flask(__name__)
+
 
 def user_input(user_question):
     # Initialize Google Generative AI Embeddings
