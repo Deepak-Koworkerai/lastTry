@@ -12,4 +12,5 @@ langchain-text-splitters
 SQLAlchemy
 faiss-cpu
 gevent
+python-dotenv
 gunicorn
