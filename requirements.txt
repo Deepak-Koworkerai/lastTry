@@ -13,3 +13,4 @@ SQLAlchemy
 faiss-cpu
 tenacity
 gevent
+gunicorn
