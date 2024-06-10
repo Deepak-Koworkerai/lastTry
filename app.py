@@ -75,9 +75,9 @@ def ask():
     # Get response based on user's question
     response = user_input(user_question)
     out = llm_model(user_question, response)
-    logger.info(f"User Question: {user_question}, Response: {response}")
+    logger.info(f"User Question: {user_question}, Response: {out}")
     # Return the response as JSON
-    return jsonify({'response': prettify_text(response)})
+    return jsonify({'response': prettify_text(out)})
 
 # @app.route('/ask', methods=['POST'])
 # def ask():
