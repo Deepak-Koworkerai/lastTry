@@ -10,10 +10,9 @@ from langchain.prompts import PromptTemplate
 import logging
 import time
 import warnings
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 warnings.filterwarnings("ignore", category=FutureWarning)
-
-
 
 def get_conversational_chain():
     prompt_template = """
@@ -32,24 +31,35 @@ Note:
 Answer:
 """
 
-    model = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.3, google_api_key='AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc')
+    model = ChatGoogleGenerativeAI(model="gemini-1.5-pro", temperature=0.3, google_api_key='YOUR_GOOGLE_API_KEY')
     prompt = PromptTemplate(template=prompt_template, input_variables=["context", "question"])
     chain = load_qa_chain(model, chain_type="stuff", prompt=prompt)
     return chain
 
+@retry(stop=stop_after_attempt(3), wait=wait_fixed(10))
+def embed_documents_with_retry(embeddings, documents):
+    return embeddings.embed_documents(documents)
+
 def user_input(user_question):
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001", google_api_key='AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc')
+    embeddings = GoogleGenerativeAIEmbeddings(
+        model="models/embedding-001",
+        google_api_key='YOUR_GOOGLE_API_KEY',
+        timeout=60  # Set a longer timeout (in seconds)
+    )
     new_db = FAISS.load_local("faiss_index", embeddings, allow_dangerous_deserialization=True)
     docs = new_db.similarity_search(user_question)
     chain = get_conversational_chain()
-    response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+    try:
+        response = chain({"input_documents": docs, "question": user_question}, return_only_outputs=True)
+    except GoogleGenerativeAIError as e:
+        logging.error(f"Error embedding content: {e}")
+        return "There was an error processing your request. Please try again later."
     return response["output_text"]
 
 def read_text_file(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         text = file.read()
     return text
-
 
 app = Flask(__name__)
 
