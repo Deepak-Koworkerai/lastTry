@@ -13,7 +13,8 @@ import requests
 import ssl 
 
 # Set up logging
-logging.basicConfig(level=logging.INFO)
+
+logging.basicConfig(level=logger = logging.getLogger(__name__)
 logger = logging.getLogger(__name__)
 
 # Load environment variables from .env file
