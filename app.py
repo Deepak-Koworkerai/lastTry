@@ -15,7 +15,6 @@ import ssl
 import textwrap
 from IPython.display import display
 from IPython.display import Markdown
-from pymongo import MongoClient
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
