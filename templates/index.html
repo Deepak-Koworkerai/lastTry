@@ -3,95 +3,347 @@
 <head>
     <title>Chatbot</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f2f5;
-            margin: 40px;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        #chat-container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-        }
-        #question {
-            width: calc(100% - 100px);
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-        #question:focus {
-            border-color: #007BFF;
-        }
-        #ask {
-            padding: 10px 20px;
-            background: #007BFF;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        #ask:hover {
-            background-color: #0056b3;
-        }
-        #response {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: all 0.3s ease-in-out;
-            opacity: 0;
-            transform: translateY(10px);
-        }
-        #response.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        b {
-            color: #007BFF;
-        }
-        li {
-            margin-left: 20px;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff00;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    transition: background-color 0.3s;
+}
+
+body.dark-mode {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+#chat-container {
+    max-width: 800px;
+    width: 100%;
+    height: 80%;
+    background-color: #d2d2d600;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s;
+}
+
+#chat-container.dark-mode {
+    background-color: #2e2e2e;
+}
+
+#header {
+    background-color: #e0e0e0;
+    color: #333333;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+#social-links a {
+    color: #333333;
+    margin-left: 10px;
+    transition: color 0.3s;
+}
+
+#social-links a:hover {
+    color: #10a37f;
+}
+
+#chat-area {
+    flex-grow: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.message {
+    background-color: #e0e0e0;
+    color: #333333;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    max-width: 80%;
+    width: fit-content;
+    align-self: flex-start;
+}
+
+.assistant-message {
+    background-color: #f0f0f0;
+    color: #333333;
+    align-self: flex-end;
+}
+
+#input-area {
+    background-color: #e0e0e0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+}
+
+#question {
+    flex-grow: 1;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    background-color: #ffffff;
+    color: #333333;
+}
+
+#ask {
+    padding: 10px 20px;
+    background-color: #10a37f;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#ask:hover {
+    background-color: #0c8a6c;
+}
+
+#background-color-button {
+    padding: 10px 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#background-color-button:hover {
+    background-color: #555555;
+}
+
+#toggle-bar-button, #documentation-bar-button {
+    padding: 10px 20px;
+    background-color: #333333;
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-left: 10px;
+}
+
+#toggle-bar-button:hover, #documentation-bar-button:hover {
+    background-color: #555555;
+}
+
+#toggle-bar {
+    position: fixed;
+    top: 20px;
+    left: -300px;
+    background-color: #e0e0e0;
+    color: #333333;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1;
+    max-width: 300px;
+    overflow-y: auto;
+    max-height: 80vh;
+    transition: left 0.3s ease-in-out;
+}
+
+#toggle-bar.visible {
+    left: 20px;
+}
+
+#toggle-bar h2 {
+    margin-top: 0;
+}
+
+#toggle-bar .conversation {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #333333;
+}
+
+#toggle-bar .conversation:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+}
+
+#toggle-bar .conversation .question {
+    color: #333333;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+#toggle-bar .conversation .response {
+    color: #333333;
+    margin-bottom: 5px;
+}
+
+#documentation-bar {
+    position: fixed;
+    top: 20px;
+    right: -300px;
+    background-color: #e0e0e0;
+    color: #333333;
+    padding: 10px;
+    border-radius: 5px;
+    z-index: 1;
+    max-width: 300px;
+    overflow-y: auto;
+    max-height: 80vh;
+    transition: right 0.3s ease-in-out;
+}
+
+#documentation-bar.visible {
+    right: 20px;
+}
+
+#documentation-bar h2 {
+    margin-top: 0;
+}
+
+#documentation-bar p {
+    color: #333333;
+    margin-bottom: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+    }
+    to {
+        transform: translateY(0);
+    }
+}
+
     </style>
 </head>
 <body>
     <div id="chat-container">
-        <h1>Personal Chatbot for Deepak!!</h1>
-        <input type="text" id="question" placeholder="Ask a question">
-        <button id="ask">Ask</button>
-        <div id="response"></div>
+        <div id="header">
+            <h1>Personal Chatbot for Deepak!!</h1>
+            <div id="social-links">
+                <a href="https://www.linkedin.com/in/deepaksakthi-v-k" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="mailto:deepak2004sakthi@gmail.com"><i class="fas fa-envelope"></i></a>
+                <a href="https://github.com/Deepak484sakthi2004" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://deepaksakthi-v-k-4a7fe.web.app" target="_blank"><i class="fas fa-external-link-alt"></i></a>
+            </div>
+        </div>
+        <div id="chat-area"></div>
+        <div id="input-area">
+            <input type="text" id="question" placeholder="Ask a question">
+            <button id="ask">Ask</button>
+            <button id="background-color-button"> Background</button>
+            <button id="toggle-bar-button"> Conversations</button>
+            <button id="documentation-bar-button"> Documentation</button>
+        </div>
     </div>
+    <div id="toggle-bar">
+        <h2>Recent Conversations</h2>
+    </div>
+    <div id="documentation-bar">
+        <h2>Documentation</h2>
+        <h3>Overview</h3>
+        <p>I have designed chatbot is designed to assist users with inquiries about Deepak's personal information, including education, technical skills, work experience, and contact details.</p>
+        <h3>Usage</h3>
+        <p>It is RAG interactive chatbot, where you can try asking questions related to my personal details. Here are some sample questions:</p>
+        <ul>
+            <li><strong>Question:</strong> "Provide details about Deepak's education."</li>
+            <li><strong>Question:</strong> "I would like to know some of his technical skills."</li>
+            <li><strong>Question:</strong> "Provide details about his work experience."</li>
+            <li><strong>Question:</strong> "Hey tell me a joke !!!"</li>
+        </ul>
+        <h3>Functionality</h3>
+        <p>The chatbot provides responses to user queries based on the available data about Deepak. It utilizes advanced natural language processing techniques to understand and generate appropriate responses.</p>
+        <h3>Technologies Used</h3>
+        <ul>
+            <li>Flask</li>
+            <li>google-generativeai</li>
+            <li>google-ai-generativelanguage</li>
+            <li>langchain</li>
+        </ul>
+        <h3>Deployment</h3>
+        <p>The chatbot is deployed on Render using a serverless service with 512MB RAM (free tier).</p>
+    </div>
+    
 
     <script>
-        $(document).ready(function() {
-            $('#ask').click(function() {
-                var question = $('#question').val();
-                if(question.trim() !== "") {
-                    $.post('/ask', { question: question }, function(data) {
-                        $('#response').html(data.response).addClass('visible');
-                    });
-                }
+$(document).ready(function () {
+    $('#ask').click(function () {
+        var question = $('#question').val();
+        if (question.trim() !== "") {
+            var messageElement = $('<div class="message"></div>').text(question);
+            $('#chat-area').append(messageElement);
+            $('#question').val('');
+
+            var conversationElement = $('<div class="conversation"></div>');
+            var questionElement = $('<div class="question"></div>').text(question);
+            conversationElement.append(questionElement);
+            $('#toggle-bar').append(conversationElement);
+
+            $.post('/ask', { question: question }, function (data) {
+                var responseElement = $('<div class="message assistant-message"></div>').text(data.response);
+                $('#chat-area').append(responseElement);
+
+                var responseElement = $('<div class="response"></div>').text(data.response);
+                conversationElement.append(responseElement);
+                $('#chat-area').scrollTop($('#chat-area')[0].scrollHeight);
             });
 
-            $('#question').keypress(function(e) {
-                if(e.which == 13) {
-                    $('#ask').click();
-                }
+            $('#toggle-bar').addClass('visible');
+            $('#documentation-bar').removeClass('visible');
+        }
+    });
+
+                $('#question').keypress(function (e) {
+                    if (e.which == 13) {
+                        $('#ask').click();
+                    }
+                });
+
+                $('#background-color-button').click(function () {
+                    $('body').toggleClass('dark-mode');
+                    $('#chat-container').toggleClass('dark-mode');
+                });
+
+                $('#toggle-bar-button').click(function () {
+                    $('#toggle-bar').toggleClass('visible');
+                    $('#documentation-bar').removeClass('visible');
+                });
+
+                $('#documentation-bar-button').click(function () {
+                    $('#documentation-bar').toggleClass('visible');
+                    $('#toggle-bar').removeClass('visible');
+                });
             });
-        });
+
     </script>
 </body>
 </html>
