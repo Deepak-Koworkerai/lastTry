@@ -35,8 +35,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def prettify_text(text):
-    prettified = text.replace('\n', '<br>')
-    prettified = prettified.replace('**', '<b>').replace('*', '<li>')
+    prettified = text.replace('**', '<b>').replace('*', '<li>')
     prettified = prettified.replace('<b>', '</b>', 1)  # Ensure to close the first bold tag correctly
     return prettified    
 
