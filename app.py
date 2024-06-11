@@ -33,12 +33,12 @@ app = Flask(__name__)
 # Set the SSL context to avoid verification issues within the Flask app context
 ssl._create_default_https_context = ssl._create_unverified_context
 
-
 def prettify_text(text):
-    prettified = text.replace('\n', '<br>')
+    prettified = text
     prettified = prettified.replace('**', '<b>').replace('*', '<li>')
     prettified = prettified.replace('<b>', '</b>', 1)  # Ensure to close the first bold tag correctly
     return prettified
+    
     
 
 def get_google_api_key():
