@@ -35,8 +35,7 @@ ssl._create_default_https_context = ssl._create_unverified_context
 
 
 def prettify_text(text):
-    prettified = text.replace('**', '<b>').replace('*', '<li>')
-    prettified = prettified.replace('<b>', '</b>', 1)  # Ensure to close the first bold tag correctly
+    prettified = text.replace('**', '\n').replace('*', '\n')
     return prettified    
 
 def get_google_api_key():
