@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-genai.configure(api_key="AIzaSyBg9Hq7avlD4iX94pnU9ce6YwT1X5LPeVc")
+genai.configure(api_key="AIzaSyBaJ_SYeO1-zmWwloE4lnmskQfZFZosfoE")
 
 # Load environment variables from .env file
 load_dotenv()
